@@ -11,13 +11,42 @@
             <result column="purchase_code" property="purchaseCode"/>
             <result column="supplier_code" property="supplierCode"/>
             <result column="product_code" property="productCode"/>
-            <result column="total_price" property="totalPrice"/>
+            <result column="i_total_price" property="totalPrice"/>
             <result column="NUMS" property="nums" jdbcType="INTEGER"/>
         </collection>
     </resultMap>
-    <select id="getPurchaseOrdersByCreate" resultMap="purchase">
-        select * from demo_b_purchaseorder o
+    <select id="getPurchaseOrderById" resultMap="purchase">
+        select o.purchase_code,o.create_date,o.create_by,o.total_price,
+               i.purchase_order_id,i.supplier_code,i.product_code,i.total_price as i_total_price,i.NUMS
+        from demo_b_purchaseorder o
             left join demo_b_purchaseorderitem i on i.purchase_code = o.purchase_code
+        where o.purchase_code = #{purchase_code}
+    </select>
+
+    <select id="getPurchaseOrdersByCreate" resultType="com.example.bean.PurchaseOrder">
+        select purchase_code as purchaseCode,create_date as createDate,create_by as createBy,total_price as totalPrice
+        from demo_b_purchaseorder
+        where create_by = #{createName}
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="getTotalNum" resultType="integer">
+        select count(*) from demo_b_purchaseorder
         where create_by = #{createName}
     </select>
+
+    <insert id="insertPurchaseOrder" parameterType="com.example.bean.PurchaseOrder">
+        insert into demo_b_purchaseorder (purchase_code,create_date,create_by,total_price,remark)
+        values (#{purchaseCode},#{createDate},#{createBy},#{totalPrice},#{remark})
+    </insert>
+
+    <update id="updatePurchaseOrder" parameterType="com.example.bean.PurchaseOrder">
+        update demo_b_purchaseorder set total_price = #{totalPrice},remark = #{remark}
+        where purchase_code = #{purchaseCode}
+    </update>
+
+    <delete id="deletePurchaseById">
+        delete from demo_b_purchaseorder
+        where purchase_code = #{purchaseCode}
+    </delete>
 </mapper>

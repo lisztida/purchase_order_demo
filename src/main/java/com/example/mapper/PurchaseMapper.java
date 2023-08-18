@@ -7,5 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface PurchaseMapper {
-    List<PurchaseOrder> getPurchaseOrdersByCreate(String createName);
+    PurchaseOrder getPurchaseOrderById(String createName);
+    Integer getTotalNum(String createName);
+    void insertPurchaseOrder(PurchaseOrder purchaseOrder);
+    void deletePurchaseById(String purchaseCode);
+    void updatePurchaseOrder(PurchaseOrder purchaseOrder);
+    List<PurchaseOrder> getPurchaseOrdersByCreate(String createName,int pageNum,int pageSize);
 }

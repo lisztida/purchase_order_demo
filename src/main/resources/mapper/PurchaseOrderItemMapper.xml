@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.PurchaseOrderItemMapper">
+    <insert id="insertItem" parameterType="com.example.bean.PurchaseOrderItem">
+        insert into demo_b_purchaseorderitem (purchase_code,supplier_code,product_code,nums,total_price)
+        values(#{purchaseCode},#{supplierCode},#{productCode},#{nums},#{totalPrice})
+    </insert>
+
+    <delete id="deleteItemsById">
+        delete from demo_b_purchaseorderitem
+        where purchase_code = #{purchaseCode}
+    </delete>
+
+</mapper>

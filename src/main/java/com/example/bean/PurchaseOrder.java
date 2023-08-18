@@ -10,5 +10,6 @@ public class PurchaseOrder {
     private String createDate;
     private String createBy;
     private Double totalPrice;
+    private String remark;
     private List<PurchaseOrderItem> purchaseOrderItems;
 }
