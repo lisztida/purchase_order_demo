@@ -1,17 +1,17 @@
 /*
- Navicat Premium Data Transfer
+ Navicat MySQL Data Transfer
 
  Source Server         : test
  Source Server Type    : MySQL
- Source Server Version : 80034
+ Source Server Version : 80030
  Source Host           : localhost:3306
  Source Schema         : purchase_order_demo
 
  Target Server Type    : MySQL
- Target Server Version : 80034
+ Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 18/08/2023 18:00:54
+ Date: 20/08/2023 23:15:39
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `demo_b_purchaseorder`  (
   `TOTAL_PRICE` decimal(10, 2) NOT NULL,
   `REMARK` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`PURCHASE_CODE`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_b_purchaseorder
@@ -54,7 +54,7 @@ CREATE TABLE `demo_b_purchaseorderitem`  (
   CONSTRAINT `demo_b_purchaseorderitem_ibfk_1` FOREIGN KEY (`PURCHASE_CODE`) REFERENCES `demo_b_purchaseorder` (`PURCHASE_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `demo_b_purchaseorderitem_ibfk_2` FOREIGN KEY (`SUPPLIER_CODE`) REFERENCES `demo_c_supplier` (`SUPPLIER_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `demo_b_purchaseorderitem_ibfk_3` FOREIGN KEY (`PRODUCT_CODE`) REFERENCES `demo_c_product` (`PRODUCT_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_b_purchaseorderitem
@@ -79,7 +79,7 @@ CREATE TABLE `demo_c_product`  (
   PRIMARY KEY (`PRODUCT_CODE`) USING BTREE,
   INDEX `SUPPLIER_CODE`(`SUPPLIER_CODE`) USING BTREE,
   CONSTRAINT `demo_c_product_ibfk_1` FOREIGN KEY (`SUPPLIER_CODE`) REFERENCES `demo_c_supplier` (`SUPPLIER_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_c_product
@@ -100,7 +100,7 @@ CREATE TABLE `demo_c_supplier`  (
   `CONACTOR` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `PHONE` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`SUPPLIER_CODE`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_c_supplier
