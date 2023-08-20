@@ -13,13 +13,35 @@
             <result column="product_code" property="productCode"/>
             <result column="i_total_price" property="totalPrice"/>
             <result column="NUMS" property="nums" jdbcType="INTEGER"/>
+            <association property="product" javaType="com.example.bean.Product" resultMap="productMap"/>
         </collection>
     </resultMap>
+    
+    <resultMap id="productMap" type="com.example.bean.Product">
+        <id column="product_code" property="productCode"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_category" property="productCategory"/>
+        <result column="spec_type" property="specType"/>
+        <result column="UNIT" property="unit" jdbcType="VARCHAR"/>
+        <result column="PRICE" property="price" jdbcType="DECIMAL"/>
+        <association property="supplier" javaType="com.example.bean.Supplier">
+            <id column="supplier_code" property="supplierCode"/>
+            <result column="supplier_name" property="supplierName"/>
+            <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+            <result column="CONACTOR" property="conactor" jdbcType="VARCHAR"/>
+            <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+    
     <select id="getPurchaseOrderById" resultMap="purchase">
         select o.purchase_code,o.create_date,o.create_by,o.total_price,
-               i.purchase_order_id,i.supplier_code,i.product_code,i.total_price as i_total_price,i.NUMS
+               i.purchase_order_id,i.supplier_code,i.product_code,i.total_price as i_total_price,i.NUMS,
+               p.product_name,p.product_category,p.spec_type,p.unit,p.price,
+               s.supplier_name,s.address,s.conactor,s.phone
         from demo_b_purchaseorder o
             left join demo_b_purchaseorderitem i on i.purchase_code = o.purchase_code
+                left join demo_c_product p on p.PRODUCT_CODE = i.PRODUCT_CODE
+                    left join demo_c_supplier s on s.SUPPLIER_CODE = p.SUPPLIER_CODE
         where o.purchase_code = #{purchase_code}
     </select>
 

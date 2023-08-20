@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductMapper">
+    <resultMap id="productMap" type="com.example.bean.Product">
+        <id column="product_code" property="productCode"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_category" property="productCategory"/>
+        <result column="spec_type" property="specType"/>
+        <result column="UNIT" property="unit" jdbcType="VARCHAR"/>
+        <result column="PRICE" property="price" jdbcType="DECIMAL"/>
+        <association property="supplier" javaType="com.example.bean.Supplier">
+            <id column="supplier_code" property="supplierCode"/>
+            <result column="supplier_name" property="supplierName"/>
+            <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+            <result column="CONACTOR" property="conactor" jdbcType="VARCHAR"/>
+            <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <select id="getProductBySup" resultMap="productMap">
+        select p.product_name,p.product_category,p.spec_type,p.unit,p.price,
+               s.supplier_name,s.address,s.conactor,s.phone
+        from demo_c_product p
+            left join demo_c_supplier s on s.SUPPLIER_CODE = p.SUPPLIER_CODE
+        where p.supplier_code = #{supplierCode}
+    </select>
+</mapper>

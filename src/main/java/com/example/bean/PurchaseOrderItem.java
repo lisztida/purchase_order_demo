@@ -10,4 +10,5 @@ public class PurchaseOrderItem {
     private String productCode;
     private int nums;
     private Float totalPrice;
+    private Product product;
 }
