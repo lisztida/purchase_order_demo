@@ -1,7 +1,6 @@
 package com.example.controller;
 
 import com.example.bean.PurchaseOrder;
-import com.example.bean.PurchaseOrderItem;
 import com.example.service.PurchaseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,22 +34,28 @@ public class PurchaseController {
     }
 
     @PostMapping("/insert")
-    public String insertPurchase(@RequestBody PurchaseOrder purchaseOrder){
+    public Map<String, Object> insertPurchase(@RequestBody PurchaseOrder purchaseOrder){
         purchaseService.insertPurchase(purchaseOrder);
+        Map<String, Object> res = new HashMap<>();
+        res.put("insertedPurchaseCode",purchaseOrder.getPurchaseCode());
 //        System.out.println(purchaseOrder);
-        return purchaseOrder.getPurchaseCode();
+        return res;
     }
 
     @DeleteMapping("/delete")
-    public String deletePurchaseById(@RequestParam("purchaseCode") String purchaseCode){
+    public Map<String, Object> deletePurchaseById(@RequestParam("purchaseCode") String purchaseCode){
         purchaseService.deletePurchaseById(purchaseCode);
-        return purchaseCode;
+        Map<String, Object> res = new HashMap<>();
+        res.put("deletedPurchaseCode",purchaseCode);
+        return res;
     }
 
     @PostMapping("/update")
-    public String updatePurchase(@RequestBody PurchaseOrder purchaseOrder){
+    public Map<String, Object> updatePurchase(@RequestBody PurchaseOrder purchaseOrder){
         purchaseService.updatePurchase(purchaseOrder);
-        return purchaseOrder.getPurchaseCode();
+        Map<String, Object> res = new HashMap<>();
+        res.put("updatedPurchaseCode",purchaseOrder.getPurchaseCode());
+        return res;
     }
 
 }

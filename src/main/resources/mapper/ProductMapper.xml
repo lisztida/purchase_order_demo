@@ -18,8 +18,8 @@
     </resultMap>
 
     <select id="getProductBySup" resultMap="productMap">
-        select p.product_name,p.product_category,p.spec_type,p.unit,p.price,
-               s.supplier_name,s.address,s.conactor,s.phone
+        select p.product_code,p.product_name,p.product_category,p.spec_type,p.unit,p.price,
+               s.supplier_code,s.supplier_name,s.address,s.conactor,s.phone
         from demo_c_product p
             left join demo_c_supplier s on s.SUPPLIER_CODE = p.SUPPLIER_CODE
         where p.supplier_code = #{supplierCode}

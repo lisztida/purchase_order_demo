@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div>
+        <!-- <div>
             <el-input style="width: 200px" suffix-icon="el-icon-search" placeholder="请输入名称" v-model="username"></el-input>
             <el-button style="margin-left: 5px" type="primary" @click="load">搜索</el-button>
             <el-button style="margin-left: 5px" type="warning" @click="reset">重置</el-button>
-        </div>
+        </div> -->
 
         <div style="margin:10px 0">
             <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>
-            <el-button type="danger">批量删除<i class="el-icon-remove-outline"></i></el-button>
+            <!-- <el-button type="danger">批量删除<i class="el-icon-remove-outline"></i></el-button> -->
         </div>
 
         <el-table :data="tableData" border stripe>
@@ -62,6 +62,9 @@
                     <el-descriptions-item label="创建日期">{{ this.detailData.createDate }}</el-descriptions-item>
                     <el-descriptions-item label="创建人">{{ this.detailData.createBy }}</el-descriptions-item>
                 </el-descriptions>
+                <el-descriptions title="供应商">
+                    <el-descriptions-item label="供应商">{{ this.supplier }}</el-descriptions-item>
+                </el-descriptions>
                 <h3>采购明细</h3>
                 <el-table :data="productData" border stripe>
                     <el-table-column prop="product.supplier.supplierName" label="供应商" align="center" width="250px"></el-table-column>
@@ -105,7 +108,7 @@
                     <h3>供应商</h3>
                     <el-form :model="formData">
                         <el-form-item>
-                            <el-select v-model="formData.purchaseOrderItems.supplierCode" placeholder="请选择供应商"
+                            <el-select v-model="supplierCode" placeholder="请选择供应商"
                                        @change = 'handleSupplierChange'>
                                 <el-option label="九七果蔬农贸有限公司1" value="SP202105"></el-option>
                                 <el-option label="九七果蔬农贸有限公司2" value="SP202106"></el-option>
@@ -114,21 +117,88 @@
                         </el-form-item>
                     </el-form>
                     <h3>采购明细</h3>
+                    <el-button :disabled="supplierCode === ''"
+                               type="primary" 
+                               icon="el-icon-plus" 
+                               @click="addItem">添加商品</el-button>
+                    <el-table :data="formData.purchaseOrderItems" stripe border>
+                        <el-table-column prop="product.supplier.supplierName" label="供应商" align="center" width="200px">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.product.supplier.supplierName" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="productCode" label="产品编码" align="center">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.productCode" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="product.productCategory" label="产品分类" align="center">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.product.productCategory" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="product.productName" label="产品名称" align="center">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.product.productName" placeholder="请选择商品"
+                                           @change="handleProductChange(scope.$index)">
+                                    <el-option
+                                        v-for="product in products"
+                                        :key="product.productCode"
+                                        :label="product.productName"
+                                        :value="product.productName">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="product.specType" label="规格型号" align="center">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.product.specType" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="product.unit" label="单位" align="center" width="80px">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.product.unit" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="product.price" label="采购单价" align="center" width="80px">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.product.price" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="nums" label="采购数量" align="center" width="180px">
+                            <template slot-scope="scope">
+                                <el-input-number v-model="scope.row.nums" 
+                                                 :min="1"
+                                                 :max="20"
+                                                 controls-position="right"
+                                                 size="mini"
+                                                 @change="handleNumsChange(scope.$index)"
+                                                 align="center"></el-input-number>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="totalPrice" label="小计" align="center">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.totalPrice" :disabled="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="移除" align="center" width="50px">
+                            <template slot-scope="scope">
+                            <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="removeItem(scope.$index)"></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                     <el-form :model="formData">
-                        <el-table :data="formData.purchaseOrderItems" style="margin-top: 20px">
-                            <el-table-column label="供应商" width="250px" prop="">
-                                <template slot-scope="{row}">
-                                    <el-form-item v-for="(item,index) in row.product" :key="index">
-                                        <el-input v-model="item.supplier.supplierName" :placeholder="item.supplier.supplierName"></el-input>
-                                    </el-form-item>
-                                </template>
-                            </el-table-column>
-                        </el-table>
+                        <h3>总金额</h3>
+                        <el-input v-model="formData.totalPrice" :disabled="true"></el-input>
+                        <h3>备注</h3>
+                        <el-input type="textarea" :rows="3" v-model="formData.remark"></el-input>
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                    <el-button :disabled="formData.totalPrice <= 0"
+                               type="primary" 
+                               @click="save">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -143,6 +213,8 @@ export default {
         return{
             //增删改查功能
             username: '',
+            //表明表单是新建还是修改
+            insertFlag: true,
             //订单总览
             tableData:[],
             //查看详情
@@ -151,9 +223,12 @@ export default {
             //分页查询数据
             total: 0,
             pageNum: 1,
-            pageSize: 5,
+            pageSize: 2,
             //订单新增/修改用参数
             supplier:"",
+            supplierCode:"",
+            nowProductName:"",
+            nowProduct:{},
             products:[],
             //订单新增/修改/查看页面
             detailVisible:false,
@@ -163,7 +238,9 @@ export default {
             newCreateDate: "",
             newCreateBy: "admin",
             //提交表单
-            formData: {}
+            formData: {},
+            //提交表单组成部分
+            formPurchaseOrderItem: {}
         }
     },
     created() {
@@ -182,7 +259,7 @@ export default {
             }).then(res => {
                 console.log(res)
                 this.tableData = res.data
-                this.total = res.total
+                this.total = res.totalNum
             }).catch((err) => {
                 console.log(err)
             })
@@ -199,22 +276,26 @@ export default {
             ]).then(resList => {
                 this.detailData = resList[0]
                 this.productData = resList[0].purchaseOrderItems
+                this.formData = resList[0]
                 // console.log(this.detailData)
                 // console.log(this.productData)
-                this.detailVisible = true
+                this.supplierCode = this.formData.purchaseOrderItems[0].product.supplier.supplierCode
+                this.supplier = this.formData.purchaseOrderItems[0].product.supplier.supplierName
             }).catch(err => {
                 console.log(err)
             })
         },
         getProductsBySup(supplierCode){
+            //选取企业后确定可以选择的产品
             this.request.get("/product/getBySup",{
                 params: {
                     supplierCode: supplierCode,
                 }
             }).then(res => {
-                console.log(res)
+                // console.log(res)
                 this.products = res
                 this.supplier = res[0].supplier.supplierName;
+                this.formData.purchaseOrderItems = []
             })
         },
         //获取日期和生成订单号
@@ -239,53 +320,99 @@ export default {
                 totalPrice: 0.0,
                 remark: "",
                 purchaseOrderItems: 
-                [
-                    {
-                        product:{
-                            supplier:{
-                                supplierName: "",
-                            }
-                        }
-                    }
-                ]
+                []
             }
+        },
+        addItem(){
+            //添加一个purchaseOredrItem
+            this.formPurchaseOrderItem = 
+            {
+                purchaseCode: this.newPurchaseCode,
+                supplierCode: this.products[0].supplier.supplierCode,
+                productCode: '',
+                nums: 1,
+                totalPrice: 0.00,
+                product: {
+                    productName: '',
+                    supplier:{
+                        supplierName: this.products[0].supplier.supplierName,
+                    },
+                    productCategory: '',
+                    productName: '',
+                    specType: '',
+                    unit: '',
+                    price: '',
+                }
+            }
+            this.formData.purchaseOrderItems.push(this.formPurchaseOrderItem)
+            // console.log(this.formData)
+        },
+        removeItem(index){
+            //移除一个purchaseOrderItem
+            this.formData.purchaseOrderItems.splice(index,1)
+            console.log(this.formData)
         },
         reset(){
             this.username=''
             this.load()
         },
         save() {
-            // console.log(this.form)
-            // for (var key of this.picform.keys()){
-            //     console.log(key);
-            // }
-            this.request.post("",this.form
-            ).then(res => {
-                if(res){
-                    this.$message.success("保存成功")
-                    this.dialogFormVisible = false
-                    this.load()
-                }else{
-                    this.$message.error("保存失败")
-                }
-            })
+            //将formData表单作为body post传到后端
+            // console.log(this.formData)
+            if(this.insertFlag){
+                this.request.post("/purchase/insert",this.formData
+                    ).then(res => {
+                        if(res){
+                            this.$message.success("保存成功")
+                            this.dialogFormVisible = false
+                            this.load()
+                        }else{
+                            this.$message.error("保存失败")
+                        }
+                    })
+            }else{
+                this.request.post("/purchase/update",this.formData
+                    ).then(res => {
+                        if(res){
+                            this.$message.success("保存成功")
+                            this.dialogFormVisible = false
+                            this.load()
+                        }else{
+                            this.$message.error("保存失败")
+                        }
+                    })
+            }
+            
         },
-        //新增订单
         handleAdd() {
+            //新增订单，将状态改为新增
+            this.insertFlag = true
             this.initForm()
+            this.supplierCode = ''
             this.setNewPurchaseCode()
+            this.formData.purchaseCode=this.newPurchaseCode
+            this.formData.createDate=this.newCreateDate
             this.dialogFormVisible = true
         },
         handleDetail(id){
+            //获取订单详情
             this.loadDetail(id)
+            this.detailVisible = true
         },
         handleEdit(id){
+            //修改订单信息，将状态变为修改
             // this.form = Object.assign({},row)
+            this.insertFlag = false
+            //获取订单详情 
+            this.loadDetail(id)
             this.dialogFormVisible = true
         },
         handleDel(id){
-            this.request.delete("/purchase/delete" + id
-            ).then(res => {
+            this.request.delete("/purchase/delete",{
+                params:{
+                    purchaseCode: id
+                }
+            }).then(res => {
                 if(res){
                     this.$message.success("删除成功")
                     this.load()
@@ -294,6 +421,7 @@ export default {
                 }
             })
         },
+        //分页查询相关
         handleSizeChange(pageSize){
             console.log(pageSize)
             this.pageSize = pageSize
@@ -304,8 +432,35 @@ export default {
             this.pageNum = pageNum
             this.load()
         },
+        //新增订单时的参数改变相关
         handleSupplierChange(supplierCode){
+            //选择供应商
             this.getProductsBySup(supplierCode)
+        },
+        handleProductChange(index){
+            //找到所选择的产品
+            this.nowProductName = this.formData.purchaseOrderItems[index].product.productName
+            // console.log(this.nowProductName)
+            // console.log(this.products)
+            //遍历产品列表
+            this.products.forEach((product) => {
+                if(product.productName === this.nowProductName){
+                    this.nowProduct = product;
+                    // console.log(this.nowProduct)
+                }
+            })
+            this.formData.purchaseOrderItems[index].product = this.nowProduct
+            this.formData.purchaseOrderItems[index].productCode = this.nowProduct.productCode
+        },
+        handleNumsChange(index){
+            const newOneTotalPrice = this.formData.purchaseOrderItems[index].product.price * this.formData.purchaseOrderItems[index].nums
+            let newTotalPrice = 0.00
+            this.formData.purchaseOrderItems[index].totalPrice = newOneTotalPrice
+            this.formData.purchaseOrderItems.forEach((item) => {
+                newTotalPrice += item.totalPrice;
+            })
+            // console.log(newTotalPrice)
+            this.formData.totalPrice = newTotalPrice
         }
     }
 }

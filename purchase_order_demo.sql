@@ -1,17 +1,17 @@
 /*
- Navicat MySQL Data Transfer
+ Navicat Premium Data Transfer
 
  Source Server         : test
  Source Server Type    : MySQL
- Source Server Version : 80030
+ Source Server Version : 80034
  Source Host           : localhost:3306
  Source Schema         : purchase_order_demo
 
  Target Server Type    : MySQL
- Target Server Version : 80030
+ Target Server Version : 80034
  File Encoding         : 65001
 
- Date: 20/08/2023 23:15:39
+ Date: 21/08/2023 14:47:27
 */
 
 SET NAMES utf8mb4;
@@ -33,8 +33,9 @@ CREATE TABLE `demo_b_purchaseorder`  (
 -- ----------------------------
 -- Records of demo_b_purchaseorder
 -- ----------------------------
-INSERT INTO `demo_b_purchaseorder` VALUES ('CG_JQ2023081712345', '2023-08-17', 'admin', 800.00, NULL);
-INSERT INTO `demo_b_purchaseorder` VALUES ('CG_JQ2023081812345', '2023-08-17', 'admin', 960.00, NULL);
+INSERT INTO `demo_b_purchaseorder` VALUES ('CG_JQ2023082154080', '2023-08-21', 'admin', 250.00, '测试添加订单');
+INSERT INTO `demo_b_purchaseorder` VALUES ('CG_JQ2023082155138', '2023-08-21', 'admin', 490.00, '测试修改订单');
+INSERT INTO `demo_b_purchaseorder` VALUES ('CG_JQ2023082156289', '2023-08-21', 'admin', 320.00, '订单添加测试2');
 
 -- ----------------------------
 -- Table structure for demo_b_purchaseorderitem
@@ -54,15 +55,15 @@ CREATE TABLE `demo_b_purchaseorderitem`  (
   CONSTRAINT `demo_b_purchaseorderitem_ibfk_1` FOREIGN KEY (`PURCHASE_CODE`) REFERENCES `demo_b_purchaseorder` (`PURCHASE_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `demo_b_purchaseorderitem_ibfk_2` FOREIGN KEY (`SUPPLIER_CODE`) REFERENCES `demo_c_supplier` (`SUPPLIER_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `demo_b_purchaseorderitem_ibfk_3` FOREIGN KEY (`PRODUCT_CODE`) REFERENCES `demo_c_product` (`PRODUCT_CODE`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of demo_b_purchaseorderitem
 -- ----------------------------
-INSERT INTO `demo_b_purchaseorderitem` VALUES (1, 'CG_JQ2023081712345', 'SP202105', 'SKU202105', 8, 400.00);
-INSERT INTO `demo_b_purchaseorderitem` VALUES (2, 'CG_JQ2023081712345', 'SP202106', 'SKU202107', 8, 400.00);
-INSERT INTO `demo_b_purchaseorderitem` VALUES (10, 'CG_JQ2023081812345', 'SP202105', 'SKU202106', 8, 480.00);
-INSERT INTO `demo_b_purchaseorderitem` VALUES (11, 'CG_JQ2023081812345', 'SP202107', 'SKU202108', 6, 480.00);
+INSERT INTO `demo_b_purchaseorderitem` VALUES (15, 'CG_JQ2023082154080', 'SP202106', 'SKU202107', 5, 250.00);
+INSERT INTO `demo_b_purchaseorderitem` VALUES (22, 'CG_JQ2023082155138', 'SP202105', 'SKU202105', 5, 250.00);
+INSERT INTO `demo_b_purchaseorderitem` VALUES (23, 'CG_JQ2023082155138', 'SP202105', 'SKU202106', 4, 240.00);
+INSERT INTO `demo_b_purchaseorderitem` VALUES (24, 'CG_JQ2023082156289', 'SP202107', 'SKU202108', 4, 320.00);
 
 -- ----------------------------
 -- Table structure for demo_c_product
