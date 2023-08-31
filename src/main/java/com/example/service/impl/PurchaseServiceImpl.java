@@ -6,6 +6,7 @@ import com.example.mapper.PurchaseMapper;
 import com.example.mapper.PurchaseOrderItemMapper;
 import com.example.service.PurchaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -41,6 +42,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     public void insertPurchase(PurchaseOrder purchaseOrder) {
         purchaseMapper.insertPurchaseOrder(purchaseOrder);
         List<PurchaseOrderItem> purchaseOrderItems = purchaseOrder.getPurchaseOrderItems();
+        //批量插入，量大时采用分批插入，尽量不使用for循环
         for(PurchaseOrderItem item:purchaseOrderItems){
             purchaseOrderItemMapper.insertItem(item);
         }
@@ -53,6 +55,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
+    @Transactional
+//    @Transactional标签处理事务
     public void updatePurchase(PurchaseOrder purchaseOrder) {
         purchaseMapper.updatePurchaseOrder(purchaseOrder);
         purchaseOrderItemMapper.deleteItemsById(purchaseOrder.getPurchaseCode());

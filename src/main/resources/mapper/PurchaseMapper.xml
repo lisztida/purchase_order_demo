@@ -46,6 +46,7 @@
         where o.purchase_code = #{purchase_code}
     </select>
 
+<!--    pagehelper 分页查询-->
     <select id="getPurchaseOrdersByCreate" resultType="com.example.bean.PurchaseOrder">
         select purchase_code as purchaseCode,create_date as createDate,create_by as createBy,total_price as totalPrice, REMARK as remark
         from demo_b_purchaseorder
